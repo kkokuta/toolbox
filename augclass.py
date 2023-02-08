@@ -1,6 +1,5 @@
 from argparse import ArgumentParser
 from collections.abc import Iterable
-from typing import Tuple
 
 
 def argclass(cls):
@@ -42,6 +41,7 @@ def argclass(cls):
 
 
 def sample_use():
+    from typing import Tuple
     
     @argclass
     class Args:
