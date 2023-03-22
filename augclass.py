@@ -7,7 +7,7 @@ def argclass(cls):
     arg2default = {arg: default for arg, default in cls.__dict__.items() if not arg.startswith("__")}
     arg2type = cls.__annotations__
 
-    for arg, type_ in arg2type.items():
+    for arg, type_ in arg2type.items(): 
         arg_str = "--" + arg.replace("_", "-")
         kwargs = dict()
         nargs = 1
@@ -42,7 +42,7 @@ def argclass(cls):
 
 def sample_use():
     from typing import Tuple
-    
+
     @argclass
     class Args:
         n_epoch: int = 100
