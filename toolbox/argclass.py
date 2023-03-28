@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from collections.abc import Iterable
+from typing import Literal
 
 
 def argclass(cls):
@@ -13,27 +13,35 @@ def argclass(cls):
         nargs = 1
 
         if type(type_) is not type:
-            types = type_.__args__
-            assert len(set(types)) == 1, "the classes for nargs should be all the same."
-            type_ = types[0]
-            nargs = len(types)
-            kwargs["nargs"] = nargs
-
+            # e.g., beta: list[str, str], option: Literal["A", "B", "C"], ...
+            args = type_.__args__
+            assert len({type(arg) for arg in args}) == 1, "type arguments should be explicit and all should be the same."
+            arg_type = type(args[0])
+            if arg_type is type:
+                # e.g., beta: list[str, str]
+                assert len(set(args)) == 1, "the classes for nargs should be all the same."
+                type_ = args[0]     # => str
+                nargs = len(args)
+                kwargs["nargs"] = nargs
+            else:
+                # e.g., option: Literal["A", "B", "C"]
+                type_ = arg_type    # => str
+                kwargs["choices"] = args        # => ('A', 'B', 'C')
+        
         if type_ is bool:
+            # e.g., skip_test: bool
             kwargs["action"] = "store_true"
             if arg in arg2default:
                 default = arg2default[arg]
                 kwargs["action"] = "store_false" if default else "store_true"
         else:
+            # e.g., n_epochs: int, beta: list[str, str], option: Literal["A", "B", "C"], ...
             kwargs["type"] = type_
             if arg in arg2default:
                 default = arg2default[arg]
-                if isinstance(default, Iterable) and not isinstance(default, str) and nargs == 1:
-                    kwargs["choices"] = default
-                    if hasattr(default, "__getitem__"):
-                        kwargs["default"] = default[0]
-                else:
-                    kwargs["default"] = default
+                if "choices" in kwargs:
+                    assert default in kwargs["choices"], f"the default value is invalid. {default!r} is not an option."
+                kwargs["default"] = default
 
         parser.add_argument(arg_str, **kwargs)
 
@@ -46,11 +54,11 @@ def sample_use():
     @argclass
     class Args:
         n_epoch: int = 100
-        model: str = ["bert", "roberta", "albert"]      # the first element is the default value if it is subscriptable
+        model: Literal["bert", "roberta", "albert"] = "bert"
         output_dir: str
         device: str = "cuda:0"
         use_cpu: bool
-        beta: Tuple[float, float] = (0.2, 0.4)
+        beta: tuple[float, float] = (0.2, 0.4)
 
     Args.output_dir = Args.output_dir.rstrip("/")
 
