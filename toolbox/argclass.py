@@ -25,6 +25,7 @@ def argclass(cls):
                 kwargs["nargs"] = nargs
             else:
                 # e.g., option: Literal["A", "B", "C"]
+                assert type_.__origin__ is Literal, "to specify the options, use `typing.Literal`."
                 type_ = arg_type    # => str
                 kwargs["choices"] = args        # => ('A', 'B', 'C')
         
