@@ -49,8 +49,6 @@ def argclass(cls):
 
 
 def sample_use():
-    from typing import Tuple
-
     @argclass
     class Args:
         n_epoch: int = 100
