@@ -22,7 +22,7 @@ def argclass(cls):
                 assert len(set(args)) == 1, "the classes for nargs should be all the same."
                 type_ = args[0]     # => str
                 nargs = len(args)
-                kwargs["nargs"] = nargs
+                kwargs["nargs"] = "*" if nargs == 1 else nargs
             else:
                 # e.g., option: Literal["A", "B", "C"]
                 assert type_.__origin__ is Literal, "to specify the options, use `typing.Literal`."
@@ -58,6 +58,7 @@ def sample_use():
         device: str = "cuda:0"
         use_cpu: bool
         beta: tuple[float, float] = (0.2, 0.4)
+        tokenizers: list[str]
 
     Args.output_dir = Args.output_dir.rstrip("/")
 
@@ -67,6 +68,7 @@ def sample_use():
     print(Args.device)
     print(Args.use_cpu)
     print(Args.beta)
+    print(Args.tokenizers)
 
 
 if __name__ == "__main__":
