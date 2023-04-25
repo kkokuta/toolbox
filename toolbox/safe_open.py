@@ -1,6 +1,6 @@
 import os
 
-def safe_open(file_path, *args, **kwargs):
+def safe_open(file_path, mode, *args, **kwargs):
     # ファイルが含まれるディレクトリを取得
     dir_path = os.path.dirname(file_path)
 
@@ -9,4 +9,4 @@ def safe_open(file_path, *args, **kwargs):
         os.makedirs(dir_path)
 
     # ファイルをオープンして返す
-    return open(file_path, *args, **kwargs)
+    return open(file_path, mode=mode, *args, **kwargs)
