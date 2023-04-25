@@ -5,7 +5,7 @@ import torch
 
 
 def fix_seeds(seed=42):
-    assert os.environ["PYTHONHASHSEED"] == str(seed), f"set PYTHONHASHSEED (={seed})"
+    assert os.environ["PYTHONHASHSEED"] == str(seed), f"set: PYTHONHASHSEED={seed}"
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
