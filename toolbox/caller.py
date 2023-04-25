@@ -2,11 +2,8 @@ import psutil
 import os
 
 def get_caller_name(*, with_dir: bool = False, with_ext: bool = False) -> str:
-    # 実行中の Python スクリプトのプロセスIDを取得
-    pid = psutil.Process().ppid()
-
-    # プロセスIDから親プロセス（つまり、シェルスクリプト）の情報を取得
-    parent_process = psutil.Process(pid)
+    # 実行中の Python スクリプトのプロセスから親プロセス（つまり、シェルスクリプト）の情報を取得
+    parent_process = psutil.Process().parent()
 
     # 親プロセスのコマンドラインを取得
     command_line = parent_process.cmdline()
