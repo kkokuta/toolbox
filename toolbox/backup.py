@@ -38,7 +38,7 @@ class IncrementalBackup:
 
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         if exc_type is not None:
-            raise exc_type
+            return
 
         enter_st_mtimes_info = self.enter_st_mtimes_info
         exit_st_mtimes_info = self.st_mtimes_info
