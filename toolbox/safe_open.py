@@ -5,8 +5,10 @@ def safe_open(file_path, mode, *args, **kwargs):
     dir_path = os.path.dirname(file_path)
 
     # ディレクトリが存在しない場合は作成
-    if not os.path.exists(dir_path):
+    try:
         os.makedirs(dir_path)
+    except FileExistsError:
+        pass
 
     # ファイルをオープンして返す
     return open(file_path, mode=mode, *args, **kwargs)
